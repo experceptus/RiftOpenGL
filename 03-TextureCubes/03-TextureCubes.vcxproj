@@ -83,6 +83,17 @@
     <ClInclude Include="SingleBox.h" />
     <ClInclude Include="Win32_GLAppUtil.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\box.jpg" />
+    <Image Include="textures\cube_texture.png" />
+    <Image Include="textures\len_std.jpg" />
+    <Image Include="textures\PM5544_with_non-PAL_signals.png" />
+    <Image Include="textures\RCA_Indian_Head_test_pattern.JPG" />
+    <Image Include="textures\Smiley.jpg" />
+    <Image Include="textures\testpat.png" />
+    <Image Include="textures\tv-test-pattern-bbc.jpg" />
+    <Image Include="textures\uvtemplate.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
