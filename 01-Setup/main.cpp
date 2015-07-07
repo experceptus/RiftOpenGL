@@ -29,7 +29,38 @@ limitations under the License.
 // Include the Oculus SDK
 #include "OVR_CAPI_GL.h"
 
+
+// Console includes
+#include <iostream>
+#include <stdio.h>
+#include <fcntl.h>
+#include <io.h>
+
 using namespace OVR;
+
+//-------------------------------------------------
+// Console code courtesy of NetworkDLS
+// http://www.networkdls.com/Page/View/Articles/Simple_Debugging_with_AllocConsole
+
+void DebugRedirectOutput(void)
+{
+	int hCrt, i;
+	FILE *hf;
+	hCrt = _open_osfhandle((long)GetStdHandle(STD_INPUT_HANDLE), _O_TEXT);
+	hf = _fdopen(hCrt, "r");
+	*stdin = *hf;
+	i = setvbuf(stdin, NULL, _IONBF, 0);
+}
+
+void DebugRedirectInput(void)
+{
+	int hCrt, i;
+	FILE *hf;
+	hCrt = _open_osfhandle((long)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT);
+	hf = _fdopen(hCrt, "w");
+	*stdout = *hf;
+	i = setvbuf(stdout, NULL, _IONBF, 0);
+}
 
 //-------------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
@@ -53,6 +84,15 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	ovrSizei windowSize = { HMD->Resolution.w / 2, HMD->Resolution.h / 2 };
 	if (!Platform.InitWindowAndDevice(hinst, Recti(Vector2i(0), windowSize), true, L"Oculus Room Tiny (GL)"))
 		return 0;
+
+	// I want a console
+	if (AllocConsole())
+	{
+		DebugRedirectOutput();
+		DebugRedirectInput();
+		std::cout << "HMD: " << HMD->ProductName << std::endl;
+
+	}
 
 	// Make eye render buffers
 	TextureBuffer * eyeRenderTexture[2];
@@ -89,7 +129,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	wglSwapIntervalEXT(0);
 
 	// Make scene - can simplify further if needed
-	Scene roomScene(false);
+	Scene roomScene(true);
 
 	bool isVisible = true;
 

@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{93A36320-5071-45B5-9A50-0B042B76826F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>My01Setup</RootNamespace>
+    <RootNamespace>RiftBasicOpenGl</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

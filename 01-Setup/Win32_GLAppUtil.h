@@ -529,9 +529,16 @@ struct Model
         glEnableVertexAttribArray(colorLoc);
         glEnableVertexAttribArray(uvLoc);
 
+		// Hard coded sizes and locations
+		//glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 24, 0);
+		//glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 24, (void*)12);
+		//glVertexAttribPointer(uvLoc, 2, GL_FLOAT, GL_FALSE, 24, (void*)16);
+
         glVertexAttribPointer(posLoc,   3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)OVR_OFFSETOF(Vertex, Pos));
         glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)OVR_OFFSETOF(Vertex, C));
         glVertexAttribPointer(uvLoc,    2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)OVR_OFFSETOF(Vertex, U));
+
+
 
         glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, NULL);
 
@@ -641,6 +648,20 @@ struct Scene
         m->AddSolidColorBox( 0, 0, 0,  +1.0f,  +1.0f, 1.0f,  Model::Color(64,64,64)); 
         m->AllocateBuffers(); Add(m);
 
+		// Thin pylon in the (almost) center of the room
+		m = new Model(Vector3f(0, 0, 0), grid_material[0]);  // Red Pylon   (-0.025,0,-0.025) and (0.025,4.0,0.025)
+	    m->AddSolidColorBox(0.0f, 0.0f, 0.0f, 0.05f, 4.0f, 0.05f, Model::Color(120, 0, 0));
+		// for those who want it in the exact center of the room
+		//m->AddSolidColorBox(-0.025f, 0.0f, -0.025f, 0.025f, 4.0f, 0.025f, Model::Color(120, 0, 0));
+		m->AllocateBuffers(); Add(m);
+
+
+		// Thin pylon at 0,0,20, the end of the room
+		m = new Model(Vector3f(0, 0, 0), grid_material[0]);  // Green Pylon
+		m->AddSolidColorBox(0.0f, 0.0f, 0.0f, 0.05f, 4.0f, 0.05f, Model::Color(0, 120, 0));
+		m->Pos = Vector3f(0, 0, 20);
+		m->AllocateBuffers(); Add(m);
+
         m = new Model(Vector3f(0,0,0),grid_material[1]);  // Walls
         m->AddSolidColorBox( -10.1f,   0.0f,  -20.0f, -10.0f,  4.0f,  20.0f, Model::Color(128,128,128)); // Left Wall
         m->AddSolidColorBox( -10.0f,  -0.1f,  -20.1f,  10.0f,  4.0f, -20.0f, Model::Color(128,128,128)); // Back Wall
@@ -651,6 +672,7 @@ struct Scene
         m->AddSolidColorBox( -10.0f,  -0.1f,  -20.0f,  10.0f,  0.0f, 20.1f,  Model::Color(128,128,128)); // Main floor
         m->AddSolidColorBox( -15.0f,  -6.1f,   18.0f,  15.0f, -6.0f, 30.0f,  Model::Color(128,128,128) );// Bottom floor
         m->AllocateBuffers(); Add(m);
+
 
         if (reducedVersion) return;
 
