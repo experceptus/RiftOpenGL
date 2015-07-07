@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <OculusHome>D:\tools\OculusSDK</OculusHome>
+    <OpenCV>D:\tools\opencv\build</OpenCV>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LibraryPath>$(OculusHome)\LibOVRKernel\Lib\Windows\Win32\Debug\VS2013;$(OculusHome)\LibOVR\Lib\Windows\Win32\Debug\VS2013;$(OpenCV)\x86\vc12\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OpenCV)\include;$(OculusHome)\LibOVRKernel\Src;$(OculusHome)\LibOVR\Src;$(OculusHome)\LibOVR\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>LibOVR.lib;LibOVRKernel.lib;opengl32.lib;opencv_ts300d.lib;opencv_world300d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="OculusHome">
+      <Value>$(OculusHome)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OpenCV">
+      <Value>$(OpenCV)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
