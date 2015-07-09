@@ -164,6 +164,9 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 		// Animate the cube
 		static float cubeClock = 0;
 		roomScene.Models[0]->Pos = Vector3f(9 * sin(cubeClock), 3, 9 * cos(cubeClock += 0.015f));
+		//roomScene.Models[0]->Pos = Vector3f(2 * sin(cubeClock), 3, 2 * cos(cubeClock += 0.015f));
+		//roomScene.Models[0]->Pos = Vector3f(2 * sin(cubeClock), sin(cubeClock), 2 * cos(cubeClock += 0.015f));
+		//roomScene.Models[0]->Pos = Vector3f(2 * sin(cubeClock), cos(cubeClock), 2 * cos(cubeClock += 0.015f));
 
 		// Clocks and Angles
 		static float angle1 = 0.0f;
@@ -185,9 +188,17 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
 		// Rotate each cube on a different axis
 		redBox.Rot = Quatf(Matrix4f::RotationX(slowClock));
+
+		// Make the box slide one unit in length, you might want to comment out the rotation for this.
+		//redBox.Pos = Vector3f(0, .5, sin(cubeClock));
+
 		greenBox.Rot = Quatf(Matrix4f::RotationY(mediumClock));
 		blueBox.Rot = Quatf(Matrix4f::RotationZ(fastClock));
 
+		// Wobble boxes
+		//blueBox.Rot = Quatf(Matrix4f::RotationZ(fastClock) * Matrix4f::RotationY(mediumClock) * Matrix4f::RotationX(slowClock));
+		//greenBox.Rot = Quatf(Matrix4f::RotationZ(fastClock) * Matrix4f::RotationY(mediumClock) * Matrix4f::RotationX(slowClock));
+		//greenBox.Rot = Quatf(Matrix4f::RotationX(slowClock) * Matrix4f::RotationY(mediumClock) * Matrix4f::RotationZ(fastClock));
 
 		// Get eye poses, feeding in correct IPD offset
 		ovrVector3f               ViewOffset[2] = { EyeRenderDesc[0].HmdToEyeViewOffset,

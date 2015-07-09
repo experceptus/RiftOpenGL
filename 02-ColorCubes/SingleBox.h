@@ -22,10 +22,9 @@ limitations under the License.
 struct SingleBox
 {
 	// Define the globals
-	GLuint program;
-	
+	GLuint program;	
 	GLuint vertId;
-	GLuint elemId;
+	GLuint indexId;
 	Vector3f     Pos;
 	Quatf        Rot;
 
@@ -43,7 +42,6 @@ struct SingleBox
 			"#version 440\n"
 			"layout (location = 0) uniform mat4 matWVP;\n"
 			"layout (location = 1) in      vec4 Position;\n"
-
 			"out     vec4 oColor;\n"
 			"void main()\n"
 			"{\n"
@@ -96,12 +94,6 @@ struct SingleBox
 		// Build the box
 		// x1,y1,z1 = The start point of the box
 		// x2,y2,z2 = The end point of the box
-
-		// Create a unit box in the exact center of the room
-		// NewBox redBox(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
-		// Now move it somewhere else.
-		// redBox.Pos = Vector3f(2, .75, 5);
-
 		AddColorBox(x1, y1, z1, x2, y2, z2);
 
 		// Create the vertex buffer
@@ -114,9 +106,9 @@ struct SingleBox
 		glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices, GL_STATIC_DRAW);
 
 		// same as above, for the index array
-		glGenBuffers(1, &elemId);
-		glBindBuffer(GL_ARRAY_BUFFER, elemId);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
+		glGenBuffers(1, &indexId);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
 	}  // end SingleBox ctor
 
@@ -125,7 +117,7 @@ struct SingleBox
 	void AddColorBox(float x1, float y1, float z1, float x2, float y2, float z2)
 	{
 
-		// Only 8 points
+		// Only 8 points needed to define a box that does not have a texture
 		GLfloat cubeVerties[] =
 		{
 			x1, y2, z1, // point 0
@@ -135,33 +127,30 @@ struct SingleBox
 			x1, y1, z1,
 			x2, y1, z1,
 			x2, y1, z2,
-			x1, y1, z2  // point 8
+			x1, y1, z2  // point 7
 		};
 
 
-		// The indices order was taken from Wikibooks OpenGL tutorials #5
-		// https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_05
-
-		// we still need 36 indices to map out the rendering
+		
 		uint16_t cubeIndices[] =
 		{
 
-			// front
+			//first two points on the top of the cube
 			0, 1, 2, // first triangle uses points 0,1,2
-			2, 3, 0,
-			// top
+			2, 3, 0, // second triangle uses points 2,3,0
+			
 			3, 2, 6,
 			6, 7, 3,
-			// back
+			
 			7, 6, 5,
 			5, 4, 7,
-			// bottom
+			
 			4, 5, 1,
 			1, 0, 4,
-			// left
+			
 			4, 0, 3,
 			3, 7, 4,
-			// right
+			
 			1, 5, 6,
 			6, 2, 1,
 		};
@@ -171,7 +160,7 @@ struct SingleBox
 
 		for (int v = 0; v < 24; v++)
 			cube_vertices[v] = cubeVerties[v];
-	}
+	} // end AddColorBox
 
 
 	// Taken directly from Win32_GLAppUtil.h
@@ -204,7 +193,7 @@ struct SingleBox
 	{
         // Gotta have the program
 		glUseProgram(program);
-
+		
 		// For fun. Change the order of the matrix multiplication. Put rotation ahead of translation. Don't forget to duck...
 		Matrix4f combined = proj * view  * Matrix4f::Translation(Pos) * Matrix4f(Rot);
 
@@ -225,25 +214,31 @@ struct SingleBox
 		glBindBuffer(GL_ARRAY_BUFFER, vertId);
 
 		// bind the indices array
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elemId);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 
 		// get the location handle to the vec4 Postion attribute. This should
 		// always be one because it was set using the layout keyword 
 		// in the vertex shader
 		GLuint posLoc = glGetAttribLocation(program, "Position");
 
-		// Once enabled, the values in the postion vector will be availible 
-		// for rendering by glDrawElements
-		glEnableVertexAttribArray(posLoc);
+
 
 		// defines the array of postion data
 		// arg1 handle
-		// arg2 size
+		// arg2 size. How big is each vertex? 3 floats.
 		// arg3 type
 		// arg4 transpose?
 		// arg5 stride. I.E. the distance between the start of the data points
 		// arg6 pointer to data. Here, the data starts at the zeroth location in the array.
 		glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		// By default attributes are not enabled.
+		// After this call, the values in the postion vector will be availible 
+		// for rendering by glDrawElements
+		glEnableVertexAttribArray(posLoc);
+
+
+		
 
 		// Finally, finally... draw something. 
 		// arg1 What are we drawing? Triangles
