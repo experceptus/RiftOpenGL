@@ -32,6 +32,8 @@ limitations under the License.
 #include <fcntl.h>
 #include <io.h>
 
+#include <chrono>
+
 
 // OpenCV - because, why not?
 #include <opencv\cv.hpp>
@@ -72,15 +74,6 @@ void DebugRedirectInput(void)
 int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 {
 	OVR::System::Init();
-	/*
-	glEnable(GL_DEBUG_OUTPUT);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	// Query the OpenGL function to register your callback function.
-	PFNGLDEBUGMESSAGECALLBACKPROC _glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)wglGetProcAddress("glDebugMessageCallback");
-	if (_glDebugMessageCallback != NULL) {
-	_glDebugMessageCallback(DebugCallback, NULL);
-	}
-	*/
 
 	// Initialise rift
 	if (ovr_Initialize(nullptr) != ovrSuccess) { MessageBoxA(NULL, "Unable to initialize libOVR.", "", MB_OK); return 0; }
@@ -107,6 +100,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 		DebugRedirectInput();
 
 		std::cout << "OpenCV Version:" << CV_VERSION << std::endl;
+		
 	}
 
 	// Make eye render buffers
@@ -149,6 +143,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	Scene roomScene(true);
 	
 	// Color names left over from earlier experiments
+	
 	SingleBox redBox(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, "textures/testpat.png");
 	redBox.Pos = Vector3f(2, .75, 5);
 	SingleBox greenBox(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, "textures/PM5544_with_non-PAL_signals.png");
@@ -156,9 +151,12 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	SingleBox blueBox(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, "textures/tv-test-pattern-bbc.jpg");
 	blueBox.Pos = Vector3f(-2.0, .75, 5);
 	
-	SingleBox tvBox(0, 0, 0, 4, 3, 4, "textures/RCA_Indian_Head_test_pattern.jpg");
-	tvBox.Pos = Vector3f(0.0, 0.0, 10);
-
+	//SingleBox tvBox(-2,-1.5, -2, 2, 1.5, 2, "textures/len_std.jpg");
+	//SingleBox tvBox(-2, -1.5, -2, 2, 1.5, 2,  "textures/RCA_Indian_Head_test_pattern.jpg");
+	SingleBox tvBox(-2, -1.5, -2, 2, 1.5, 2, "textures/uvtemplate.bmp");
+	tvBox.Pos = Vector3f(0.0, 1.5, 12);
+	
+	
 	bool isVisible = true;
 
 
@@ -203,14 +201,10 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 		redBox.Rot = Quatf(Matrix4f::RotationX(slowClock));
 		greenBox.Rot = Quatf(Matrix4f::RotationY(mediumClock));
 		blueBox.Rot = Quatf(Matrix4f::RotationZ(fastClock));
+		tvBox.Rot = Quatf(Matrix4f::RotationY(slowClock));
 
-		//tvBox.Rot = Quatf(Matrix4f::RotationX(slowClock));
-
-		roomScene.Models[0]->Pos = Vector3f(9 * sin(cubeClock), 3, 9 * cos(cubeClock += 0.015f));
-
-
-		// Drunken Cube
-		//zeroBox.Rot = Quatf(Matrix4f::RotationX(angle) * Matrix4f::RotationY(angle2) *  Matrix4f::RotationZ(angle3));
+		// removing the floating box
+		//roomScene.Models[0]->Pos = Vector3f(9 * sin(cubeClock), 3, 9 * cos(cubeClock += 0.015f));
 
 
 
