@@ -643,8 +643,8 @@ struct Scene
 
 		// Construct geometry
 		Model * m = new Model(Vector3f(0, 0, 0), grid_material[2]);  // Moving box
-		m->AddSolidColorBox(0, 0, 0, +1.0f, +1.0f, 1.0f, Model::Color(64, 64, 64));
-		m->AllocateBuffers(); Add(m);
+		//m->AddSolidColorBox(0, 0, 0, +1.0f, +1.0f, 1.0f, Model::Color(64, 64, 64));
+		//m->AllocateBuffers(); Add(m);
 
 		// Thin pylon in the (almost) center of the room
 		m = new Model(Vector3f(0, 0, 0), grid_material[0]);  // Red Pylon
