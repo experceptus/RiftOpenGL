@@ -22,7 +22,7 @@ limitations under the License.
 struct SingleBox
 {
 	// Define the globals
-	GLuint program;	
+	GLuint program;
 	GLuint vertId;
 	GLuint indexId;
 	Vector3f     Pos;
@@ -131,26 +131,26 @@ struct SingleBox
 		};
 
 
-		
+
 		uint16_t cubeIndices[] =
 		{
 
 			//first two points on the top of the cube
 			0, 1, 2, // first triangle uses points 0,1,2
 			2, 3, 0, // second triangle uses points 2,3,0
-			
+
 			3, 2, 6,
 			6, 7, 3,
-			
+
 			7, 6, 5,
 			5, 4, 7,
-			
+
 			4, 5, 1,
 			1, 0, 4,
-			
+
 			4, 0, 3,
 			3, 7, 4,
-			
+
 			1, 5, 6,
 			6, 2, 1,
 		};
@@ -191,9 +191,9 @@ struct SingleBox
 	// No real need to do this, I just wanted the method to have a different name from Scene.Render in main.cpp
 	void Render2(Matrix4f view, Matrix4f proj)
 	{
-        // Gotta have the program
+		// Gotta have the program
 		glUseProgram(program);
-		
+
 		// For fun. Change the order of the matrix multiplication. Put rotation ahead of translation. Don't forget to duck...
 		Matrix4f combined = proj * view  * Matrix4f::Translation(Pos) * Matrix4f(Rot);
 
@@ -238,17 +238,17 @@ struct SingleBox
 		glEnableVertexAttribArray(posLoc);
 
 
-		
+
 
 		// Finally, finally... draw something. 
 		// arg1 What are we drawing? Triangles
 		// arg2 How many are we drawing? 36 points that define 12 triangles
 		// arg3 What type of data is this?
 		// arg4 pointer to index data, start at the first element in the array. 
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT,0);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
 
-        // Clean up after each draw call
-        glDisableVertexAttribArray(posLoc);
+		// Clean up after each draw call
+		glDisableVertexAttribArray(posLoc);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glUseProgram(0);
