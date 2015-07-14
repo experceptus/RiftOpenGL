@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SingleBox.h" />
+    <ClInclude Include="Win32_GLAppUtil.h" />
+    <ClInclude Include="MultiBox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="textures">
+      <UniqueIdentifier>{687fc8c5-32be-4454-9b0f-875365c23e9b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\box.jpg">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\cube_texture.png">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\len_std.jpg">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\PM5544_with_non-PAL_signals.png">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\RCA_Indian_Head_test_pattern.JPG">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\Smiley.jpg">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\testpat.png">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\tv-test-pattern-bbc.jpg">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\uvtemplate.bmp">
+      <Filter>textures</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
