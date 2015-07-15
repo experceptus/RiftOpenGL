@@ -84,6 +84,8 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	if (result != ovrSuccess) { MessageBoxA(NULL, "Oculus Rift not detected.", "", MB_OK); ovr_Shutdown(); return 0; }
 	if (HMD->ProductName[0] == '\0') MessageBoxA(NULL, "Rift detected, display not enabled.", "", MB_OK);
 
+
+
 	// Setup Window and Graphics
 	// Note: the mirror window can be any size, for this sample we use 1/2 the HMD resolution
 	ovrSizei windowSize = { HMD->Resolution.w / 2, HMD->Resolution.h / 2 };
@@ -165,7 +167,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 		myChar.Rot = Quatf(Matrix4f::RotationX(slowClock));
 
 		roomScene.Models[0]->Pos = Vector3f(9 * sin(cubeClock), 3, 9 * cos(cubeClock += 0.015f));
-		myChar.Pos = Vector3f(1, 1, 1);
+		//myChar.Pos = Vector3f(2 * sin(cubeClock), 3, 2 * cos(cubeClock += 0.015f));
 		// Get eye poses, feeding in correct IPD offset
 		ovrVector3f               ViewOffset[2] = { EyeRenderDesc[0].HmdToEyeViewOffset,
 			EyeRenderDesc[1].HmdToEyeViewOffset };

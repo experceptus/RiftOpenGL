@@ -20,11 +20,13 @@ struct Character
 	void initialize() {
 		// Setup and compile our shaders
 		theShader = new LabManual::Shader("./shaders/shader.vs", "./shaders/shader.frag");
-		 
+		//theShader = new LabManual::Shader();
 		program = theShader->getProgram();
 		// Load models
-		//theModel = new LabManual::Model("./resources/objects/nanosuit/nanosuit.obj");
+	     //theModel = new LabManual::Model("./resources/objects/nanosuit/nanosuit.obj");
 		theModel = new LabManual::Model("./resources/monkey/monkey.obj");
+		// cube makes even less sense
+		//theModel = new LabManual::Model("./resources/cube/cube.obj");
 
 	}
 
@@ -33,14 +35,25 @@ struct Character
 	} //  { Mat = Matrix4f(Rot); Mat = Matrix4f::Translation(Pos) * Mat; return Mat; }
 
 	void Render3(Matrix4f view, Matrix4f proj) {
-		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, (FLOAT*)&proj);
-		glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE,  (FLOAT*)&view);
+		// Gotta have the program
+		glUseProgram(program);
+
+		//glm::mat4 model;
+	//	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+		//model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f)); 
+		//Matrix4f combined = proj * view * Matrix4f::Translation(Pos) * Matrix4f(Rot);
+		Matrix4f combined = proj * view * Matrix4f::Translation(Vector3f(0, 1, 2)) * Matrix4f::RotationX(4.712);//Matrix4f(Rot);
+
+		GLuint uniLoc = glGetUniformLocation(program, "mvp");
 		
-		Matrix4f mat = Matrix4f::Translation(Pos) * Matrix4f(Rot);
-		glm::mat4 model;
-		//model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f)); // Translate it down a bit so it's at the center of the scene
-		//model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// It's a bit too big for our scene, so scale it down
-		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, (FLOAT*)&mat);
+		//bool isIt = glIsProgram(program);
+
+		glUniformMatrix4fv(uniLoc, 1, GL_TRUE, (FLOAT*)&combined);
+
+	//	glm::mat4 model;
+	//	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f)); // Translate it down a bit so it's at the center of the scene
+	//	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// It's a bit too big for our scene, so scale it down
+	//	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, (FLOAT*)&mat);
 		theModel->Draw(*theShader);
 
 	}

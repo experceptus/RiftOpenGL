@@ -30,10 +30,69 @@ namespace LabManual
 
 	struct Shader
 	{
-		Shader() {}
+
 
 		GLuint Program;
 		// Constructor generates the shader on the fly
+
+		Shader() {
+			// Adding in and out texture coord variables. Removing Color.
+
+
+
+			static const GLchar* VertexShaderSrc =
+				"#version 440\n"
+				"layout (location = 0) in vec3 position;\n"
+				"layout (location = 1) in vec3 normal;\n"
+				"layout (location = 2) in vec2 texCoords;\n"
+				"layout (location = 3) uniform mat4 mvp;\n"
+
+	
+				"out vec2 TexCoords;\n"
+
+				"void main()\n"
+				"{\n"
+				"   gl_Position = mvp* vec4(position, 1.0f);\n"
+			//	"   oTexCoord   = TexCoord;\n"
+				"}\n";
+
+
+			// Removed oColor
+			static const char* FragmentShaderSrc =
+				"#version 440\n"
+				"uniform sampler2D texture_diffuse1;\n"
+
+				"in vec2 TexCoords;\n"
+				"out vec4 color;\n"
+				"void main()\n"
+				"{\n"
+				"   color = texture(texture_diffuse1, TexCoords);\n"
+				"}\n";
+
+			// Create the shaders
+			GLuint    vshader = CreateShader(GL_VERTEX_SHADER, VertexShaderSrc);
+			GLuint    fshader = CreateShader(GL_FRAGMENT_SHADER, FragmentShaderSrc);
+			// Assemble the program
+			Program = glCreateProgram();
+			glAttachShader(Program, vshader);
+			glAttachShader(Program, fshader);
+
+			glLinkProgram(Program);
+			GLint r;
+			glGetProgramiv(Program, GL_LINK_STATUS, &r);
+			if (!r)
+			{
+				GLchar msg[1024];
+				glGetProgramInfoLog(Program, sizeof(msg), 0, msg);
+				OVR_DEBUG_LOG(("Linking shaders failed: %s\n", msg));
+			}
+
+			// Once the program is compiled and linked, you don't need the shaders anymore
+			glDetachShader(Program, vshader);
+			glDetachShader(Program, fshader);
+
+
+		}
 		Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 		{
 			// 1. Retrieve the vertex/fragment source code from filePath
@@ -98,6 +157,8 @@ namespace LabManual
 			glAttachShader(this->Program, vertex);
 			glAttachShader(this->Program, fragment);
 			glLinkProgram(this->Program);
+
+
 			// Print linking errors if any
 			glGetProgramiv(this->Program, GL_LINK_STATUS, &success);
 			if (!success)
@@ -119,6 +180,29 @@ namespace LabManual
 		GLuint getProgram()
 		{
 			return this->Program;
+		}
+
+		// Taken directly from Win32_GLAppUtil.h
+		GLuint CreateShader(GLenum type, const GLchar* src)
+		{
+			GLuint shader = glCreateShader(type);
+
+			glShaderSource(shader, 1, &src, NULL);
+			glCompileShader(shader);
+
+			GLint r;
+			glGetShaderiv(shader, GL_COMPILE_STATUS, &r);
+			if (!r)
+			{
+				GLchar msg[1024];
+				glGetShaderInfoLog(shader, sizeof(msg), 0, msg);
+				if (msg[0]) {
+					OVR_DEBUG_LOG(("Compiling shader failed: %s\n", msg));
+				}
+				return 0;
+			}
+
+			return shader;
 		}
 	};
 	//////////////////////////////////// Mesh /////////////////////////////////////////////////////
@@ -211,6 +295,7 @@ namespace LabManual
 		void Draw(Shader shader)
 		{
 			// Bind appropriate textures
+
 			GLuint diffuseNr = 1;
 			GLuint specularNr = 1;
 			for (GLuint i = 0; i < this->textures.size(); i++)
@@ -230,7 +315,7 @@ namespace LabManual
 				// And finally bind the texture
 				glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
 			}
-
+		
 			// Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
 			glUniform1f(glGetUniformLocation(shader.Program, "material.shininess"), 16.0f);
 
@@ -242,7 +327,7 @@ namespace LabManual
 			// Always good practice to set everything back to defaults once configured.
 			for (GLuint i = 0; i < this->textures.size(); i++)
 			{
-				glActiveTexture(GL_TEXTURE0 + i);
+			glActiveTexture(GL_TEXTURE0 + i);
 				glBindTexture(GL_TEXTURE_2D, 0);
 			}
 		}
@@ -272,11 +357,13 @@ namespace LabManual
 
 			// Set the vertex attribute pointers
 			// Vertex Positions
-			glEnableVertexAttribArray(0);
+			
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+			glEnableVertexAttribArray(0);
 			// Vertex Normals
-			glEnableVertexAttribArray(1);
+			
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Normal));
+			glEnableVertexAttribArray(1);
 			// Vertex Texture Coords
 			glEnableVertexAttribArray(2);
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TexCoords));

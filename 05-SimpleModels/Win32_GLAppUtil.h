@@ -151,7 +151,8 @@ struct TextureBuffer
 //-------------------------------------------------------------------------------------------
 struct OGL
 {
-    static const bool   UseDebugContext = false;
+    static const bool   UseDebugContext = true;
+	//static const bool   UseDebugContext = false;
 
     HWND                Window;
     HDC                 hDC;
