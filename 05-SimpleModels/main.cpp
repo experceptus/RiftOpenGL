@@ -164,7 +164,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 		static float slowClock = 0.0f;
 		angle1 = (angle1 != 360.0) ? angle1 += 0.2 : 0;
 		slowClock = (angle1 * 3.141592f) / 180;
-		myChar.Rot = Quatf(Matrix4f::RotationX(slowClock));
+		//myChar.Rot = Quatf(Matrix4f::RotationX(slowClock));
 
 		roomScene.Models[0]->Pos = Vector3f(9 * sin(cubeClock), 3, 9 * cos(cubeClock += 0.015f));
 		//myChar.Pos = Vector3f(2 * sin(cubeClock), 3, 2 * cos(cubeClock += 0.015f));

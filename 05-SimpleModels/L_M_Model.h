@@ -229,9 +229,9 @@ namespace LabManual
 		vector<GLushort> suzanne_elements;
 
 
-		void setup() {
-			load_obj("./resources/monkey/monkey.obj", suzanne_vertices, suzanne_normals, suzanne_elements);
-		}
+		//void setup() {
+		//	load_obj("./resources/monkey/monkey.obj", suzanne_vertices, suzanne_normals, suzanne_elements);
+		//}
 
 		void load_obj(const char* filename, vector<glm::vec4> &vertices, vector<glm::vec3> &normals, vector<GLushort> &elements) {
 			ifstream in(filename, ios::in);
@@ -298,7 +298,7 @@ namespace LabManual
 
 			GLuint diffuseNr = 1;
 			GLuint specularNr = 1;
-			for (GLuint i = 0; i < this->textures.size(); i++)
+			for (GLint i = 0; i < this->textures.size(); i++)
 			{
 				glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
 				// Retrieve texture number (the N in diffuse_textureN)
@@ -311,13 +311,16 @@ namespace LabManual
 					ss << specularNr++; // Transfer GLuint to stream
 				number = ss.str();
 				// Now set the sampler to the correct texture unit
-				glUniform1f(glGetUniformLocation(shader.Program, (name + number).c_str()), i);
+				
+			//	std::cout << "Uniform name: " << (name + number).c_str() << std::endl;
+				GLuint location = glGetUniformLocation(shader.Program, (name + number).c_str());
+				glUniform1i(location, i);
 				// And finally bind the texture
 				glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
 			}
-		
+			GLuint shiny = glGetUniformLocation(shader.Program, "material.shininess");
 			// Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
-			glUniform1f(glGetUniformLocation(shader.Program, "material.shininess"), 16.0f);
+			glUniform1f(shiny, 16.0f);
 
 			// Draw mesh
 			glBindVertexArray(this->VAO);
@@ -373,8 +376,11 @@ namespace LabManual
 
 			//glBindVertexArray(0);
 			glBindVertexArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			//glBindBuffer(GL_ARRAY_BUFFER, 0);
+			//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		    // glEnable(GL_DEPTH_TEST);
+			//  glDepthFunc(GL_LESS);
 		}
 	};
 	/////////////////////////////////////////// Model /////////////////////////////////////////////
