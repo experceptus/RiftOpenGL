@@ -36,7 +36,10 @@ limitations under the License.
 #include <fcntl.h>
 #include <io.h>
 
-#include "SingleBox.h"
+// Model includes
+
+
+#include "Character.h"
 
 using namespace OVR;
 
@@ -133,15 +136,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	// Make scene - can simplify further if needed
 	Scene roomScene(true);
 
-	// In an eariler version, the boxes were solid colors, hence the names
-	SingleBox redBox(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
-	redBox.Pos = Vector3f(2, .75, 5);
-	SingleBox greenBox(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
-	greenBox.Pos = Vector3f(0.0, .75, 5);
-	SingleBox blueBox(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
-	blueBox.Pos = Vector3f(-2.0, .75, 5);
-
-
+	Character myChar(2);
 
 	bool isVisible = true;
 
@@ -169,43 +164,14 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
 		// Animate the cube
 		static float cubeClock = 0;
-		roomScene.Models[0]->Pos = Vector3f(9 * sin(cubeClock), 3, 9 * cos(cubeClock += 0.015f));
-		//roomScene.Models[0]->Pos = Vector3f(2 * sin(cubeClock), 3, 2 * cos(cubeClock += 0.015f));
-		//roomScene.Models[0]->Pos = Vector3f(2 * sin(cubeClock), sin(cubeClock), 2 * cos(cubeClock += 0.015f));
-		//roomScene.Models[0]->Pos = Vector3f(2 * sin(cubeClock), cos(cubeClock), 2 * cos(cubeClock += 0.015f));
-
-		// Clocks and Angles
 		static float angle1 = 0.0f;
-		static float angle2 = 0.0f;
-		static float angle3 = 0.0f;
 		static float slowClock = 0.0f;
-		static float mediumClock = 0.0f;
-		static float fastClock = 0.0f;
-
-		// advance the clocks each frame
 		angle1 = (angle1 != 360.0) ? angle1 += 0.2 : 0;
-		angle2 = (angle2 != 360.0) ? angle2 += 0.4 : 0;
-		angle3 = (angle3 != 360.0) ? angle3 += 0.6 : 0;
-
-		//convert to radians
 		slowClock = (angle1 * 3.141592f) / 180;
-		mediumClock = (angle2 * 3.141592f) / 180;
-		fastClock = (angle3 * 3.141592f) / 180;
+		myChar.Rot = Quatf(Matrix4f::RotationX(slowClock));
 
-		// Rotate each cube on a different axis
-		redBox.Rot = Quatf(Matrix4f::RotationX(slowClock));
-
-		// Make the box slide one unit in length, you might want to comment out the rotation for this.
-		//redBox.Pos = Vector3f(0, .5, sin(cubeClock));
-
-		greenBox.Rot = Quatf(Matrix4f::RotationY(mediumClock));
-		blueBox.Rot = Quatf(Matrix4f::RotationZ(fastClock));
-
-		// Wobble boxes
-		//blueBox.Rot = Quatf(Matrix4f::RotationZ(fastClock) * Matrix4f::RotationY(mediumClock) * Matrix4f::RotationX(slowClock));
-		//greenBox.Rot = Quatf(Matrix4f::RotationZ(fastClock) * Matrix4f::RotationY(mediumClock) * Matrix4f::RotationX(slowClock));
-		//greenBox.Rot = Quatf(Matrix4f::RotationX(slowClock) * Matrix4f::RotationY(mediumClock) * Matrix4f::RotationZ(fastClock));
-
+		roomScene.Models[0]->Pos = Vector3f(9 * sin(cubeClock), 3, 9 * cos(cubeClock += 0.015f));
+		myChar.Pos = Vector3f(2 * sin(cubeClock), 3, 2 * cos(cubeClock += 0.015f));
 		// Get eye poses, feeding in correct IPD offset
 		ovrVector3f               ViewOffset[2] = { EyeRenderDesc[0].HmdToEyeViewOffset,
 			EyeRenderDesc[1].HmdToEyeViewOffset };
@@ -237,12 +203,8 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
 				// Render world
 				roomScene.Render(view, proj);
+				myChar.Render3(view, proj);
 
-				// Render the boxes
-				redBox.Render2(view, proj);
-				greenBox.Render2(view, proj);
-				blueBox.Render2(view, proj);
-			
 				// Avoids an error when calling SetAndClearRenderSurface during next iteration.
 				// Without this, during the next while loop iteration SetAndClearRenderSurface
 				// would bind a framebuffer with an invalid COLOR_ATTACHMENT0 because the texture ID

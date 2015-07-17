@@ -138,16 +138,21 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	{
 		// Keyboard inputs to adjust player orientation
 		static float Yaw(3.141592f);
-		if (Platform.Key[VK_LEFT])  Yaw += 0.02f;
-		if (Platform.Key[VK_RIGHT]) Yaw -= 0.02f;
+		if (Platform.Key[VK_LEFT])  Yaw += 0.01f;
+		if (Platform.Key[VK_RIGHT]) Yaw -= 0.01f;
+
 
 		// Keyboard inputs to adjust player position
 		static Vector3f Pos2(0.0f, 1.6f, -5.0f);
-		if (Platform.Key['W'] || Platform.Key[VK_UP])     Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, -0.05f));
-		if (Platform.Key['S'] || Platform.Key[VK_DOWN])   Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, +0.05f));
-		if (Platform.Key['D'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(+0.05f, 0, 0));
-		if (Platform.Key['A'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(-0.05f, 0, 0));
-		Pos2.y = ovrHmd_GetFloat(HMD, OVR_KEY_EYE_HEIGHT, Pos2.y);
+		if (Platform.Key['W'] || Platform.Key[VK_UP])     Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, -0.025f));
+		if (Platform.Key['S'] || Platform.Key[VK_DOWN])   Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, +0.025f));
+		if (Platform.Key['D'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(+0.025f, 0, 0));
+		if (Platform.Key['A'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(-0.025f, 0, 0));
+		if (Platform.Key['Q']) Pos2 += Vector3f(0, +0.025f, 0);
+		if (Platform.Key['E'])  Pos2 += Vector3f(0, -0.025f, 0);
+
+
+		//Pos2.y = ovrHmd_GetFloat(HMD, OVR_KEY_EYE_HEIGHT, Pos2.y);
 
 		// Animate the cube
 		static float cubeClock = 0;

@@ -4,18 +4,23 @@
   <PropertyGroup Label="UserMacros">
     <OculusHome>D:\tools\OculusSDK</OculusHome>
     <OpenCV>D:\tools\opencv\build</OpenCV>
+    <GLEW>C:\tools\glew-1.12.0</GLEW>
+    <GLM>C:\tools\glm</GLM>
+    <SOIL>D:\tools\SOIL</SOIL>
+    <ASSIMP>d:\tools\assimp-master</ASSIMP>
   </PropertyGroup>
   <PropertyGroup>
-    <LibraryPath>$(OculusHome)\LibOVRKernel\Lib\Windows\Win32\Debug\VS2013;$(OculusHome)\LibOVR\Lib\Windows\Win32\Debug\VS2013;$(OpenCV)\x86\vc12\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(OculusHome)\LibOVRKernel\Lib\Windows\Win32\Debug\VS2013;$(OculusHome)\LibOVR\Lib\Windows\Win32\Debug\VS2013;$(GLEW)\lib\Debug\Win32;$(SOIL)\lib;$(ASSIMP)\build\code\debug;$(OpenCV)\x86\vc12\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(OpenCV)\include;$(OculusHome)\LibOVRKernel\Src;$(OculusHome)\LibOVR\Src;$(OculusHome)\LibOVR\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ASSIMP)\include;$(GLEW)\include;$(GLM);$(OpenCV)\include;$(OculusHome)\LibOVRKernel\Src;$(OculusHome)\LibOVR\Src;$(SOIL)\src;$(OculusHome)\LibOVR\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>LibOVR.lib;LibOVRKernel.lib;opengl32.lib;opencv_ts300d.lib;opencv_world300d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LibOVR.lib;LibOVRKernel.lib;opengl32.lib;opencv_ts300d.lib;opencv_world300d.lib;SOIL.lib;assimp-vc120-mtd.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -24,6 +29,18 @@
     </BuildMacro>
     <BuildMacro Include="OpenCV">
       <Value>$(OpenCV)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLEW">
+      <Value>$(GLEW)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLM">
+      <Value>$(GLM)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SOIL">
+      <Value>$(SOIL)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ASSIMP">
+      <Value>$(ASSIMP)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

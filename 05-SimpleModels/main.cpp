@@ -88,7 +88,8 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
 	// Setup Window and Graphics
 	// Note: the mirror window can be any size, for this sample we use 1/2 the HMD resolution
-	ovrSizei windowSize = { HMD->Resolution.w / 2, HMD->Resolution.h / 2 };
+	//ovrSizei windowSize = { HMD->Resolution.w / 2, HMD->Resolution.h / 2 };
+	ovrSizei windowSize = { HMD->Resolution.w , HMD->Resolution.h  };
 	if (!Platform.InitWindowAndDevice(hinst, Recti(Vector2i(0), windowSize), true, L"Oculus Room Tiny (GL)"))
 		return 0;
 
@@ -147,17 +148,23 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	{
 		// Keyboard inputs to adjust player orientation
 		static float Yaw(3.141592f);
-		if (Platform.Key[VK_LEFT])  Yaw += 0.02f;
-		if (Platform.Key[VK_RIGHT]) Yaw -= 0.02f;
+		if (Platform.Key[VK_LEFT])  Yaw += 0.01f;
+		if (Platform.Key[VK_RIGHT]) Yaw -= 0.01f;
+
 
 		// Keyboard inputs to adjust player position
 		static Vector3f Pos2(0.0f, 1.6f, -5.0f);
-		if (Platform.Key['W'] || Platform.Key[VK_UP])     Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, -0.05f));
-		if (Platform.Key['S'] || Platform.Key[VK_DOWN])   Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, +0.05f));
-		if (Platform.Key['D'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(+0.05f, 0, 0));
-		if (Platform.Key['A'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(-0.05f, 0, 0));
-		Pos2.y = ovrHmd_GetFloat(HMD, OVR_KEY_EYE_HEIGHT, Pos2.y);
-
+		if (Platform.Key['W'] || Platform.Key[VK_UP])     Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, -0.025f));
+		if (Platform.Key['S'] || Platform.Key[VK_DOWN])   Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, +0.025f));
+		if (Platform.Key['D'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(+0.025f, 0, 0));
+		if (Platform.Key['A'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(-0.025f, 0, 0));
+		if (Platform.Key['Q']) Pos2 += Vector3f(0, +0.025f, 0);
+		if (Platform.Key['E'])  Pos2 += Vector3f(0, -0.025f, 0);
+	
+		
+		//Pos2.y = ovrHmd_GetFloat(HMD, OVR_KEY_EYE_HEIGHT, Pos2.y);
+	
+		
 		// Animate the cube
 		static float cubeClock = 0;
 		static float angle1 = 0.0f;
@@ -194,7 +201,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 				Vector3f finalForward = finalRollPitchYaw.Transform(Vector3f(0, 0, -1));
 				Vector3f shiftedEyePos = Pos2 + rollPitchYaw.Transform(EyeRenderPose[eye].Position);
 
-				Matrix4f view = Matrix4f::LookAtRH(shiftedEyePos, shiftedEyePos + finalForward, finalUp);
+    			Matrix4f view = Matrix4f::LookAtRH(shiftedEyePos, shiftedEyePos + finalForward, finalUp);
 				Matrix4f proj = ovrMatrix4f_Projection(HMD->DefaultEyeFov[eye], 0.2f, 1000.0f, ovrProjection_RightHanded);
 
 				// Render world
